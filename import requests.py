@@ -5,6 +5,8 @@ page = requests.get('https://books.toscrape.com/catalogue/set-me-free_988/index.
 soup = BeautifulSoup (page.content, 'html.parser')
 print(soup)
 
-headers = { "product_page_url, universal_ product_code (upc)"}
+headers = { "product_page_url", "universal_ product_code (upc)", "book_title", "price_including_tax", "price_excluding_tax", "quantity_available", "product_description", "category","review_rating", "image_url"}
+
+
 
 
