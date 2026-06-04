@@ -15,7 +15,7 @@ print(items[0].find(class_= 'star-rating Five')
 
 quantity_available = [items[0].find(class_= 'instock availability')
 review_rating = [items[0].find(class_= 'star-rating Five')
-                 
+                
 
 items_2 = product.find_all(class_= 'table table-striped')
 
@@ -42,4 +42,4 @@ Book_Report = pd.DataFrame(
     "review_rating",
     "image_url"
     })
-    
+    print(Book_Report)
