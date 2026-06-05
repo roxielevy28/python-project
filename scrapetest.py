@@ -70,7 +70,10 @@ print(review_rating)
 #     link is the category (not "Home" or "Books")?
 #   - image_url: look for the `<img>` tag inside `<div class="item active">`
 #   - product_page_url: this is just the URL you used in requests.get()
- data ["product_page_url"]= https://books.toscrape.com/catalogue/set-me-free_988/index.html
+
+product_page_url = ('https://books.toscrape.com/catalogue/set-me-free_988/index.html')
+# print(product_page_url)
+
 Book_Report = pd.DataFrame(
     {
     "product_page_url",
