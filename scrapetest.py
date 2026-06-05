@@ -1,3 +1,4 @@
+import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 
@@ -23,16 +24,16 @@ items = product.find_all(class_= 'col-sm-6 product_main')
 # ❓ HINT: `find()` returns the *element*. To get the text inside it, you need
 #   to use `.text` or `.get_text()` on the result. Try printing the element first,
 #   then figure out how to extract just the text.
-print(items[0].find(class_= 'instock availability')
-print(items[0].find(class_= 'star-rating Five')
+print(items[0].find(class_= 'instock availability').get_text())
+print(items[0].find(class_= 'star-rating Five').get_text())
 
 # ⚠️ SYNTAX: Missing closing `]` on both lines — brackets must match parentheses.
 # ❓ HINT: The star-rating is stored in the class name itself (e.g. "star-rating Five").
 #   The number of stars is the *second class* on that `<p>` tag. Think about how
 #   to read the class attribute from the element to get the word "Five", then
 #   convert that word to a number.
-quantity_available = [items[0].find(class_= 'instock availability')
-review_rating = [items[0].find(class_= 'star-rating Five')
+quantity_available = [items[0].find(class_= 'instock availability')]
+review_rating = [items[0].find(class_= 'star-rating Five')]
 
 
 # ✅ You found the right table! It has all the price/UPC info you need.
@@ -40,7 +41,7 @@ review_rating = [items[0].find(class_= 'star-rating Five')
 #   Each row is a key-value pair. For example, the row with "Price (excl. tax)"
 #   in the `<th>` has the actual price in the `<td>` next to it.
 #   Try: loop through all `<tr>` elements and print each `<th>` and `<td>` pair.
-items_2 = product.find_all(class_= 'table table-striped')
+items_2[0] = product.find_all(class_= 'table table-striped')
 
 # ⚠️ SYNTAX: `items[2]` should probably be `items_2[0]` — check your variable names.
 #   Also, the `find(class_= '')` has an empty class name. What class or tag are you
