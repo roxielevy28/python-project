@@ -24,17 +24,22 @@ items = product.find_all(class_= 'col-sm-6 product_main')
 # ❓ HINT: `find()` returns the *element*. To get the text inside it, you need
 #   to use `.text` or `.get_text()` on the result. Try printing the element first,
 #   then figure out how to extract just the text.
-print(items[0].find(class_= 'instock availability').get_text())
-print(items[0].find(class_= 'star-rating Five').get_text())
+Book_Title=(items[0].find('h1').get_text())
+# print(Book_Title)
+
+quantity_available=(items[0].find(class_= 'instock availability').get_text())
+# print(quantity_available)
+
+Book_rating=items[0].find(class_='star-rating')['class'][1]
+rates={"One": "1", "Two": "2", "Three": "3", "Four": "4", "Five": "5"}
+review_rating= rates[book_rating]
+# print(review_rating)
 
 # ⚠️ SYNTAX: Missing closing `]` on both lines — brackets must match parentheses.
 # ❓ HINT: The star-rating is stored in the class name itself (e.g. "star-rating Five").
 #   The number of stars is the *second class* on that `<p>` tag. Think about how
 #   to read the class attribute from the element to get the word "Five", then
 #   convert that word to a number.
-quantity_available = [items[0].find(class_= 'instock availability')]
-review_rating = [items[0].find(class_= 'star-rating Five')]
-
 
 # ✅ You found the right table! It has all the price/UPC info you need.
 # ❓ HINT: The table has rows (`<tr>`) with headers (`<th>`) and data (`<td>`).
