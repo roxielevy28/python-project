@@ -24,8 +24,15 @@ review_rating= rates[book_rating]
 # print(review_rating)
 
 items_1[0] = product.find(class_= 'carousel')
+
 Image_URL=(items_1[0].find('img') ['src'])
 print(Image_URL)
+
+items_2[0] = product.find(class_= 'breadcrumb')
+category=items_2[0].(href='../category/books/young-adult_21/index.html') ['href'] [1]
+print(category)
+
+items_3[0] = product.find(class_= 'breadcrumb')
 
 items_2[0] = product.find_all(class_= 'table table-striped')
 
