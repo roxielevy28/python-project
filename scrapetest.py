@@ -32,13 +32,23 @@ items_2[0] = product.find(class_= 'breadcrumb')
 category=items_2[0].(href='../category/books/young-adult_21/index.html') ['href'] [1]
 print(category)
 
-items_3[0] = product.find(class_= 'breadcrumb')
+items_3[0] = product.find(class_= 'sub-header')
+product_description=(items_3[0].find('p').get_text())
+print(product_description)
 
-items_2[0] = product.find_all(class_= 'table table-striped')
+info_table = soup.find('table', class_='table-striped')
+Table_Data= {}
+for row in info_table.find_all('tr'):
+header = row.find('th').text.strip()
+value = row.find('td').text.strip()
+Table_Data[header] = value
 
-universal_ product_code (upc) = items_2[0].find_
-price_including_tax = items_2[0].find_
-price_excluding_tax
+universal_ product_code (upc) = Table_Data.get ('UPC')
+price_including_tax = Table_Data.get ('Price (incl. tax)')
+price_excluding_tax =Table_Data.get ('Price (excl. tax)')
+print(universal_ product_code (upc))
+print(price_including_tax)
+print(price_excluding_tax)
 
 product_page_url = ('https://books.toscrape.com/catalogue/set-me-free_988/index.html')
 # print(product_page_url)
