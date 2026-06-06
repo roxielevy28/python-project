@@ -23,17 +23,17 @@ rates={"One": "1", "Two": "2", "Three": "3", "Four": "4", "Five": "5"}
 review_rating= rates[Book_rating]
 # print(review_rating)
 
-items_1[0] = product.find(class_= 'carousel')
+items[0] = product.find(class_= 'carousel')
 
-Image_URL=(items_1[0].find('img') ['src'])
-print(Image_URL)
+Image_URL=(items[0].find('img') ['src'])
+# print(Image_URL)
 
-items_2[0] = product.find(class_= 'breadcrumb')
-category=items_2[0].find(href='../category/books/young-adult_21/index.html') ['href'] [1]
-print(category)
+items[0] = product.find(class_= 'breadcrumb')
+category=items[0].find(href='../category/books/young-adult_21/index.html') ['href'] [18:29]
+# print(category)
 
-items_3[0] = product.find(class_= 'sub-header')
-product_description=(items_3[0].find('p').get_text())
+items[0] = product.find(class_= 'sub-header')
+product_description=(items[0].find('p').get_text())
 print(product_description)
 
 info_table = soup.find('table', class_='table-striped')
@@ -46,9 +46,9 @@ for row in info_table.find_all('tr'):
 UPC = Table_Data.get ('UPC')
 price_including_tax = Table_Data.get ('Price (incl. tax)')
 price_excluding_tax = Table_Data.get ('Price (excl. tax)')
-print(UPC)
-print(price_including_tax)
-print(price_excluding_tax)
+# print(UPC)
+# print(price_including_tax)
+# print(price_excluding_tax)
 
 product_page_url = ('https://books.toscrape.com/catalogue/set-me-free_988/index.html')
 # print(product_page_url)
@@ -68,4 +68,4 @@ Book_Report = pd.DataFrame(
     })
 
 print(Book_Report)
-Book_Report.to.to_csv(Book_Report.csv)
+Book_Report.to_csv(Book_Report.csv)
