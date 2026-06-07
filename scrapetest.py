@@ -33,7 +33,7 @@ category=items[0].find(href='../category/books/young-adult_21/index.html') ['hre
 # print(category)
 
 items[0] = product.find(class_= 'sub-header')
-product_description=(items[0].find('p').text.strip())
+product_description=(items[0].find_next('p').text.strip())
 print(product_description)
 
 info_table = soup.find('table', class_='table-striped')
