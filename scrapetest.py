@@ -22,7 +22,7 @@ Book_Title=(items[0].find('h1').get_text())
 
 # ✅ Availability text extracted. TIP: the text has extra whitespace/newlines.
 #   Consider using .strip() to clean it up.
-quantity_available=(items[0].find(class_= 'instock availability').get_text())
+quantity_available=(items[0].find(class_= 'instock availability').text.strip())
 
 # ✅ Clever approach! Reading the class attribute to get "Five", then mapping to "5"
 Book_rating=items[0].find(class_='star-rating')['class'][1]
