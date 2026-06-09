@@ -33,8 +33,8 @@ review_rating= rates[Book_rating]
 #   You may want to convert it to an absolute URL. Think about joining it with
 #   the base URL: "https://books.toscrape.com/catalogue/"
 items[0] = product.find(class_= 'carousel')
-Image_URL=(items[0].find('img') ['src'])
-
+Image=(items[0].find('img') ['src'])
+Image_URL= urljoin("https://books.toscrape.com/catalogue/", Image)
 # ⚠️ BUG: This only works for THIS specific book (hardcoded href).
 #   What if you scrape a different book? The category href will be different.
 #   TIP: The breadcrumb has the structure Home > Books > Category.
