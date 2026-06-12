@@ -43,7 +43,7 @@ Image_URL= urljoin("https://books.toscrape.com/catalogue/", Image)
 #   from the breadcrumb list (index [2]), or get the text of the last <a>
 #   before the active <li>.
 items[0] = product.find(class_= 'breadcrumb')
-category=items[0].find(href='../category/books/young-adult_21/index.html') ['href'] [18:29]
+category=items[0].find_all('a')[2].text.strip()
 
 # ✅ Product description extracted. Good use of find_next('p')!
 #   (In the other file you used .find('p') which didn't work — this is correct.)
