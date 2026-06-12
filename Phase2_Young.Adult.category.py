@@ -42,7 +42,7 @@ in_the_event_of_other_pages= soup.find(class_='next')
 for i in range(1, 3): # this catergory has 3 pages I was trying to get the link for the remaining 2 pages
     url="https://books.toscrape.com/catalogue/category/books/young-adult_21/page-"+str(i)+".html"
     relative_link= in_the_event_of_other_pages.find('a')['href']
-    absolute_link= urljoin("https://books.toscrape.com/catalogue/category/books/young-adult_21/index.html", relative_link)
+    absolute_link= urljoin(https://books.toscrape.com/catalogue/category/books/young-adult_21/index.html, relative_link)
 
 print(absolute_link)
 
