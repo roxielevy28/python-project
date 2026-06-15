@@ -23,7 +23,7 @@ raw_book_link=(books_on_page[0].find('h3').find('a')['href'])
 #   the function from that module. The first argument should be a real URL,
 #   like the one you stored in the `url` variable.
 #   Fix: urljoin(url, raw_book_link)
-Actual_book_link= urljoin('url', raw_book_link)
+Actual_book_link= urljoin(url, raw_book_link)
 # print(Actual_book_link) # i was trying to get the link for all the books on the page but i was only able to get the link for the first book. I was trying to loop through the books_on_page list but i was not able to get it to work.
 
 # 💡 HINT for looping over books_on_page:
