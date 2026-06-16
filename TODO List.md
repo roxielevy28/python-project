@@ -31,8 +31,7 @@ for book_element in books_on_page:
 ```
 * Line 24 to 30 were addressed
 
-* i chnage from print to -book_data = scrape_one_book(full_url)
-Once that's working, take it further — instead of printing, call your book-scraper:
+* Once that's working, take it further — instead of printing, call your book-scraper:
 
 ```python
 book_data = scrape_one_book(full_url)
