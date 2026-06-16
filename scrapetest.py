@@ -43,7 +43,9 @@ review_rating= rates[Book_rating]
 items[0] = product.find(class_= 'carousel')
 Image=(items[0].find('img') ['src'])
 image_url= urljoin(BASE_URL, Image)
-# i took out the hardcoded url and replaced it with the BASE_URL variable that i created at the top. this way, when i scrape all the books, i can just call the BASE_URL variable instead of writing the url every time.
+
+#lines 49 to 63 were updated from the previous week. i removed the moments and added the base url variable to make it easier to reuse in the future when i scrape all the books. i can just call this variable instead of writing the url every time.
+
 items[0] = product.find(class_= 'breadcrumb')
 category=items[0].find_all('a')[2].text.strip()
 
@@ -82,6 +84,7 @@ price_excluding_tax = Table_Data.get ('Price (excl. tax)')
 #   relative URLs to absolute ones.
 product_page_url = ('https://books.toscrape.com/catalogue/set-me-free_988/index.html')
 
+# this was updated from the previous week so i removed the moments 
 book_report = pd.DataFrame(
     {
         'product_page_url': [product_page_url],
@@ -111,5 +114,7 @@ book_report.to_csv('Book_Report.csv')
 #           all_books.append(book_data)
 #       master_report = pd.DataFrame(all_books)
 #       master_report.to_csv('all_books.csv', index=False)
+
+# i incldued this on the phase2 file
 #
 #   This is much faster and cleaner than creating 1000 separate CSVs!
