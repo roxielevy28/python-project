@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 # 🎯 MILESTONE 3 — Next step: Turn this single-book script into a REUSABLE
 #   FUNCTION that you can call for any book URL. Think of it like a template:
 #
-#       def scrape_one_book(url):
+#       def scrape_one_book(url):  ******* i made these changes*******
 #           page = requests.get(url)
 #           ... extract all 10 fields ...
 #           return { ... dictionary of results ... }
