@@ -13,6 +13,8 @@ from bs4 import BeautifulSoup
 #
 #   Then your Phase2 file can call this function for EVERY book it finds.
 #   That's how you scale from 1 book → 1000 books without rewriting anything!
+
+# i removed the base url and the category url, should i have kept those or not since im making a resusable ink
 def scrape_one_book(url):
     page = requests.get(url)
     soup = BeautifulSoup (page.content, 'html.parser')
@@ -22,12 +24,7 @@ def scrape_one_book(url):
 
     # 💡 STYLE NOTE: You're using a mix of naming styles.
     #   Python convention (PEP 8) says use snake_case for variables:
-    #   - book_title instead of Book_Title
-    #   - review_rating ✅ (already snake_case!)
-    #   - image_url instead of Image_URL
-    #   Not wrong, just inconsistent — pick one style and stick with it.
-    #   It'll help a lot when you start building bigger scripts!
-
+    
     # ***** okay i fixed the naming convention to snake_case. i will be consistent with it from now on.*****
     book_title=(items[0].find('h1').get_text())
 
@@ -40,8 +37,6 @@ def scrape_one_book(url):
     items[0] = product.find(class_= 'carousel')
     image=(items[0].find('img') ['src'])
     image_url= urljoin(url, image)
-
-    #lines 49 to 63 were updated from the previous week. i removed the moments and added the base url variable to make it easier to reuse in the future when i scrape all the books. i can just call this variable instead of writing the url every time.
 
     items[0] = product.find(class_= 'breadcrumb')
     category=items[0].find_all('a')[2].text.strip()
@@ -78,7 +73,7 @@ def scrape_one_book(url):
  #   coming from each book's link on the listing page.
  #   TIP: Python's `urllib.parse.urljoin(base, relative)` can help convert
  #   relative URLs to absolute ones.
-***** product_page_url = ('https://books.toscrape.com/catalogue/set-me-free_988/index.html')***** # Im not sure if there still needs to be here
+***** product_page_url = ('https://books.toscrape.com/catalogue/set-me-free_988/index.html')***** # Im not sure if there still needs to be here since im coverting to a reusable function
     
     return {
             'product_page_url': [product_page_url],
@@ -93,18 +88,8 @@ def scrape_one_book(url):
             'image_url': [image_url],
     }
 
-
+# ********I belive i added all the changes to make this a reusable function********
 # 🎯 MILESTONE 3 NOTE: When you scale to 1000 books, you DON'T want to create
 #   a new DataFrame for each book. Instead, collect ALL book dictionaries into
 #   one big list, then build ONE DataFrame at the very end:
 #
-#       all_books = []
-#       for url in all_book_urls:
-#           book_data = scrape_one_book(url)
-#           all_books.append(book_data)
-#       master_report = pd.DataFrame(all_books)
-#       master_report.to_csv('all_books.csv', index=False)
-
-# i incldued this on the phase2 file
-#
-#   This is much faster and cleaner than creating 1000 separate CSVs!
