@@ -14,7 +14,7 @@ from bs4 import BeautifulSoup
 #   Then your Phase2 file can call this function for EVERY book it finds.
 #   That's how you scale from 1 book → 1000 books without rewriting anything!
 
-# i removed the base url and the category url, should i have kept those or not since im making a resusable ink
+# Roxanne: i removed the base url and the category url? should i have kept those or not since im making a resusable ink
 def scrape_one_book(url):
     page = requests.get(url)
     soup = BeautifulSoup (page.content, 'html.parser')
@@ -22,20 +22,15 @@ def scrape_one_book(url):
     product = soup.find(id="default")
     items = product.find_all(class_= 'col-sm-6 product_main')
 
-    # 💡 STYLE NOTE: You're using a mix of naming styles.
-    #   Python convention (PEP 8) says use snake_case for variables:
-    
-    # ***** okay i fixed the naming convention to snake_case. i will be consistent with it from now on.*****
     book_title=(items[0].find('h1').get_text())
-
     quantity_available=(items[0].find(class_= 'instock availability').text.strip())
 
     book_rating=items[0].find(class_='star-rating')['class'][1]
     rates={"One": "1", "Two": "2", "Three": "3", "Four": "4", "Five": "5"}
     review_rating= rates[book_rating]
 
-    items[0] = product.find(class_= 'carousel')
-    image=(items[0].find('img') ['src'])
+    carousel = product.find(class_= 'carousel')
+    image=(carousel.find('img') ['src'])
     image_url= urljoin(url, image)
 
     items[0] = product.find(class_= 'breadcrumb')
