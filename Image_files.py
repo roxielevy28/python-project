@@ -63,3 +63,4 @@ def download_image(image_url, category_type, book_title):
             f.write(chunk)
 
     return file_path
+print("All book images")
