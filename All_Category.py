@@ -10,6 +10,69 @@ from bs4 import BeautifulSoup
 # Now I'll use it for EVERY category to scrape ALL 1000 books on the site.
 from scrapetest import scrape_one_book
 
+# =============================================================================
+# 🔴 ISSUE #1 — 'Books' homepage scraped as a category (wrong!)
+# =============================================================================
+# Harold: (2026-06-28, Milestone 4) The sidebar navigation on books.toscrape.com
+# has "Books" as the FIRST link — but that's the HOMEPAGE, not a real category.
+# Your loop scrapes it anyway, producing books.csv (all 1000 books) which is
+# a duplicate of what every other category already covers.
+#
+# ✅ FIX: Skip the first item in the loop. Change:
+#        for category in category_links:
+#    To:
+#        for category in category_links[1:]:
+#
+# 🎯 WHY: Without this fix, you waste time re-scraping all 1000 books AND
+#    you get a misleading books.csv that isn't a real category.
+
+# =============================================================================
+# 🔴 ISSUE #2 — NO ERROR HANDLING: One bad category crashes everything
+# =============================================================================
+# Harold: (2026-06-28, Milestone 4) This loop runs through 50 categories. If
+# ONE category fails (network error, unexpected HTML, etc.), the entire script
+# crashes and you lose ALL categories you already scraped and saved.
+#
+# ✅ FIX: Wrap the entire category loop body in try/except:
+#
+#        for category in category_links[1:]:
+#            try:
+#                cat_name = category["name"]
+#                cat_url  = category["url"]
+#                ... (all the scraping logic) ...
+#                df.to_csv(f"csv_reports/{safe_name}.csv", index=False)
+#            except Exception as e:
+#                print(f"  ❌ Failed on {cat_name}: {e}")
+#                continue
+#
+# 🎯 WHY: With 50 categories, the chance of at least one failure is very high.
+#    This way you get 49 good CSVs instead of 0.
+
+# =============================================================================
+# 🟡 ISSUE #3 — CSVs saved to root folder (needs subfolder)
+# =============================================================================
+# Harold: (2026-06-28, Milestone 4) Same as Phase2 — all 50 CSV files are
+# dumped in the project root, mixed with your Python scripts.
+#
+# ✅ FIX: Add `import os` at the top, then before the loop add:
+#        os.makedirs('csv_reports', exist_ok=True)
+#    And change the save line to:
+#        df.to_csv(f"csv_reports/{safe_name}.csv", index=False)
+
+# =============================================================================
+# 🟢 ISSUE #4 — Minor cleanup: typo and unused variable
+# =============================================================================
+# Harold: (2026-06-28, Milestone 4) Two small things:
+#
+# 1. TYPO: `catergory_name` should be `category_name` (appears on line 22)
+#    Fix: rename it everywhere in this file.
+#
+# 2. UNUSED VARIABLE: `page_content = soup.find(id="default")` on line 19
+#    is never used anywhere in this file. Delete it.
+#
+# 3. DUPLICATE: `all_book_urls = []` appears twice (lines 33 and 36).
+#    Remove the second one.
+
 home_url = 'https://books.toscrape.com/index.html'
 page = requests.get(home_url)
 soup = BeautifulSoup(page.content, 'html.parser')

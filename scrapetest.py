@@ -3,6 +3,73 @@ import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 
+# =============================================================================
+# 🔴 ISSUE #1 — List-wrapped return values (MOST IMPORTANT FIX)
+# =============================================================================
+# Harold: (2026-06-28, Milestone 2 → affects ALL other files) The return
+# dictionary at the bottom of scrape_one_book() wraps every value in a list:
+#
+#        return {
+#            'book_title': [book_title],         # ← wrapped in [...]
+#            'review_rating': [review_rating],   # ← wrapped in [...]
+#            ...
+#        }
+#
+# When pandas builds a DataFrame from many of these dicts, the CSV shows
+# ['The Hobbit'] with brackets and quotes instead of just The Hobbit.
+#
+# ✅ FIX: Remove ALL the [...] wrapping. Change the return to:
+#
+#        return {
+#            'product_page_url': product_page_url,
+#            'universal_product_code': universal_product_code,
+#            'book_title': book_title,
+#            'price_including_tax': price_including_tax,
+#            'price_excluding_tax': price_excluding_tax,
+#            'quantity_available': quantity_available,
+#            'product_description': product_description,
+#            'category': category,
+#            'review_rating': review_rating,
+#            'image_url': image_url,
+#        }
+#
+# 🎯 WHY FIX THIS FIRST: Every other file (Phase2, All_Category, Image_files)
+#    calls this function. Fixing it here automatically fixes the CSV output
+#    everywhere AND simplifies the download_image() function in Image_files.py.
+
+# =============================================================================
+# 🟡 ISSUE #2 — quantity_available stores extra text
+# =============================================================================
+# Harold: (2026-06-28, Milestone 2) Currently quantity_available contains
+# "In stock (19 available)" — a full sentence. If you ever want to analyze
+# stock numerically (e.g., "which books have < 5 in stock?"), this won't work.
+#
+# ✅ FIX: Add `import re` at the top, then change the extraction to:
+#
+#        raw_quantity = items[0].find(class_='instock availability').text.strip()
+#        quantity_available = int(re.search(r'\d+', raw_quantity).group())
+#
+# 🎯 WHY: Numbers can be sorted and compared. Strings like
+#    "In stock (19 available)" cannot be used in math/filtering operations.
+
+# =============================================================================
+# 🟡 ISSUE #3 — Product descriptions appear duplicated
+# =============================================================================
+# Harold: (2026-06-28, Milestone 2) In the CSV output, descriptions show the
+# same paragraph twice. The current code does:
+#
+#        items[0] = product.find(class_='sub-header')
+#        product_description = items[0].find_next('p').text.strip()
+#
+# The find_next('p') might be picking up a description that already contains
+# both the truncated "..." version AND the full version concatenated.
+#
+# ✅ FIX: Investigate the HTML structure. Try using find_all('p') and taking
+#    just the first <p> after the sub-header, or use a more specific CSS
+#    selector to target only the description paragraph.
+#
+# 🎯 WHY: Duplicated text inflates file size and corrupts text analysis.
+
 # 🎯 MILESTONE 3 — Next step: Turn this single-book script into a REUSABLE
 #   FUNCTION that you can call for any book URL. Think of it like a template:
 #

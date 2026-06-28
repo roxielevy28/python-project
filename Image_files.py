@@ -3,6 +3,58 @@ import os
 import requests
 from bs4 import BeautifulSoup
 from scrapetest import scrape_one_book
+
+# =============================================================================
+# 🔴 ISSUE #1 — NO ERROR HANDLING: One bad image crashes everything
+# =============================================================================
+# Harold: (2026-06-28, connects to Milestone 4) This script downloads hundreds
+# of images. If ONE image URL is broken or the network times out, the entire
+# script crashes and you lose all remaining downloads.
+#
+# ✅ FIX: Wrap the download loop in try/except:
+#
+#        for book_url in book_links:
+#            try:
+#                book_data = scrape_one_book(book_url)
+#                download_image(...)
+#            except Exception as e:
+#                print(f"  ⚠️ Skipped {book_url}: {e}")
+#                continue
+#
+# 🎯 WHY: Network requests fail sometimes. This lets the script keep going.
+
+# =============================================================================
+# 🟡 ISSUE #2 — download_image() has unnecessary complexity
+# =============================================================================
+# Harold: (2026-06-28, connects to Milestone 2) The download_image function
+# has lots of isinstance() checks like:
+#        if isinstance(category_type, (list, tuple)):
+#            category_str = category_type[0] if category_type else "unknown"
+#
+# These were added to handle the list-wrapped values from scrape_one_book().
+# Once you fix Issue #1 in scrapetest.py (remove the [...] wrapping), you can
+# SIMPLIFY this function significantly:
+#
+#   BEFORE (current, defensive):
+#        if isinstance(category_type, (list, tuple)):
+#            category_str = category_type[0] if category_type else "unknown"
+#        else:
+#            category_str = category_type or "unknown"
+#
+#   AFTER (clean, once scrapetest.py is fixed):
+#        category_str = category_type or "unknown"
+#
+# 🎯 WHY: Cleaner code is easier to read and maintain. Fix the root cause
+#    in scrapetest.py instead of working around it everywhere.
+
+# =============================================================================
+# 🟡 ISSUE #3 — 'Books' homepage included again
+# =============================================================================
+# Harold: (2026-06-28, Milestone 4) Same as All_Category.py — the first item
+# in category links is "Books" (the homepage). Skip it:
+#
+#        for category in all_categories[1:]:
+
 def clean_filename(name):
     return "".join(c if c.isalnum() else "_" for c in name.lower())
  # this function will get all the category links from the main page of the website
