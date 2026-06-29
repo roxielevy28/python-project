@@ -1,6 +1,7 @@
 from urllib.parse import urljoin
 # Harold: (Milestone 3) Added below import — needed to build and export a DataFrame from all scraped books
 import pandas as pd
+import os
 import requests
 from bs4 import BeautifulSoup
 from scrapetest import scrape_one_book
@@ -22,7 +23,6 @@ url_for_all_books_in_category=[]
 page = requests.get(category_url)
 soup = BeautifulSoup(page.text,'html.parser')
 
-product = soup.find(id="default")
 books_on_page= soup.find_all(class_= 'col-xs-6 col-sm-4 col-md-3 col-lg-3')
 
 for book_element in books_on_page:
@@ -34,27 +34,6 @@ print(url_for_all_books_in_category)
 
 all_books = []
 
-# Harold: (Milestone 3, Step 1) Scrape all books on page 1 FIRST
-# url_for_all_books_in_category already holds every book link from the first page
-# Harold: (2026-06-28, connects to Issue #2) ⚠️ NO ERROR HANDLING here — if one
-# book page fails, the whole script crashes. Here's what to change:
-#
-#   CURRENT (fragile):
-#       for url in url_for_all_books_in_category:
-#           book_data = scrape_one_book(url)
-#           all_books.append(book_data)
-#
-#   BETTER (resilient):
-#       for url in url_for_all_books_in_category:
-#           try:
-#               book_data = scrape_one_book(url)
-#               all_books.append(book_data)
-#           except Exception as e:
-#               print(f"  ⚠️ Skipped {url}: {e}")
-#               continue
-#
-# 🎯 WHY: With 30+ books in this category, even a 5% failure rate means you'd
-#    lose 1-2 books silently — or worse, crash before saving anything.
 for url in url_for_all_books_in_category:
     try:
         book_data = scrape_one_book(url)
@@ -109,46 +88,7 @@ while True:
 master_report = pd.DataFrame(all_books)
 master_report.to_csv('all_books.csv', index=False)
 
-# =============================================================================
-# 🟡 ISSUE #4 — quantity_available contains extra text
-# =============================================================================
-# Harold: (2026-06-28, connects to Milestone 2) The quantity_available field
-# stores "In stock (19 available)" as a string. If you ever want to analyze
-# stock levels numerically (e.g., "which books have fewer than 5 in stock?"),
-# you'd need to parse this first.
-#
-# ✅ FIX (in scrapetest.py): Extract just the number:
-#
-#       import re
-#       raw_quantity = items[0].find(class_='instock availability').text.strip()
-#       quantity_available = int(re.search(r'\d+', raw_quantity).group())
-#
-# 🎯 WHY: Numbers let you sort, filter, and do math. Strings like
-#    "In stock (19 available)" can't be compared numerically.
 
-# =============================================================================
-# 🟡 ISSUE #5 — Product descriptions appear duplicated
-# =============================================================================
-# Harold: (2026-06-28, connects to Milestone 2) In the CSV output, descriptions
-# appear to repeat the same paragraph twice. This is happening in
-# scrape_one_book() where it finds the <p> tag after .sub-header.
-#
-# ✅ FIX (in scrapetest.py): The issue is likely that find_next('p') is picking
-#    up a description that already includes the "..." truncated version plus
-#    the full version. Try being more specific about which <p> tag to grab,
-#    or check if the page has multiple <p> tags in that section.
-#
-# 🎯 WHY: Duplicated text inflates file size and makes analysis less accurate.
-
-# =============================================================================
-# 🟢 QUICK WINS — Minor cleanup
-# =============================================================================
-# Harold: (2026-06-28, Milestone 3) Small things that'll keep this file clean:
-#
-# 1. The `product` variable on line 23 is found but never used in this file.
-#    (It's used INSIDE scrape_one_book, but not here.) You can delete:
-#        product = soup.find(id="default")
-#
 # 2. The `url_for_all_books_in_category` list is built but only used in the
 #    loop below. Consider adding a count print so you know how many books
 #    were found:
@@ -203,7 +143,7 @@ master_report.to_csv('all_books.csv', index=False)
 │  5  │ Duplicated descriptions      │ scrapetest.py       │ done  │
 │  6  │ CSVs scattered in root       │ Phase2 + All_Cat    │ ❌ TODO  │
 │  7  │ 'Books' homepage in loop     │ All_Category.py     │ ❌ TODO  │
-│  8  │ Image download no error hdlg │ Image_files.py      │ ❌ TODO  │
+│  8  │ Image download no error hdlg │ Image_files.py      │ done  │
 │  9  │ catergory_name typo          │ All_Category.py     │ ❌ TODO  │
 │ 10  │ Unused variables             │ All_Category.py     │ ❌ TODO  │
 └─────┴──────────────────────────────┴─────────────────────┴──────────┘
