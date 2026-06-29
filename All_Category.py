@@ -4,54 +4,6 @@ import requests
 from bs4 import BeautifulSoup
 from scrapetest import scrape_one_book
 
-# =============================================================================
-# 🔴 ISSUE #1 — 'Books' homepage scraped as a category (wrong!)
-# =============================================================================
-# Harold: (2026-06-28, Milestone 4) The sidebar navigation on books.toscrape.com
-# has "Books" as the FIRST link — but that's the HOMEPAGE, not a real category.
-# Your loop scrapes it anyway, producing books.csv (all 1000 books) which is
-# a duplicate of what every other category already covers.
-#
-# ✅ FIX: Skip the first item in the loop. Change:
-#        for category in category_links:
-#    To:
-#        for category in category_links[1:]:
-#
-# 🎯 WHY: Without this fix, you waste time re-scraping all 1000 books AND
-#    you get a misleading books.csv that isn't a real category.
-
-# =============================================================================
-# 🔴 ISSUE #2 — NO ERROR HANDLING: One bad category crashes everything
-# =============================================================================
-# Harold: (2026-06-28, Milestone 4) This loop runs through 50 categories. If
-# ONE category fails (network error, unexpected HTML, etc.), the entire script
-# crashes and you lose ALL categories you already scraped and saved.
-#
-# ✅ FIX: Wrap the entire category loop body in try/except:
-#
-#        for category in category_links[1:]:
-#            try:
-#                cat_name = category["name"]
-#                cat_url  = category["url"]
-#                ... (all the scraping logic) ...
-#                df.to_csv(f"csv_reports/{safe_name}.csv", index=False)
-#            except Exception as e:
-#                print(f"  ❌ Failed on {cat_name}: {e}")
-#                continue
-#
-# 🎯 WHY: With 50 categories, the chance of at least one failure is very high.
-#    This way you get 49 good CSVs instead of 0.
-
-# =============================================================================
-# 🟡 ISSUE #3 — CSVs saved to root folder (needs subfolder)
-# =============================================================================
-# Harold: (2026-06-28, Milestone 4) Same as Phase2 — all 50 CSV files are
-# dumped in the project root, mixed with your Python scripts.
-#
-# ✅ FIX: Add `import os` at the top, then before the loop add:
-#        os.makedirs('csv_reports', exist_ok=True)
-#    And change the save line to:
-#        df.to_csv(f"csv_reports/{safe_name}.csv", index=False)
 
 # =============================================================================
 # 🟢 ISSUE #4 — Minor cleanup: typo and unused variable
@@ -77,11 +29,11 @@ category_list = soup.find(class_='nav nav-list')
 categories = category_list.find_all('a')
 
 for category_url in categories:
-    catergory_name = category_url.text.strip()
+    category_name = category_url.text.strip()
     link = category_url['href']
     complete_link = urljoin(home_url, link)
     category_links.append({
-        "name": catergory_name,
+        "name": category_name,
         "url": complete_link
     })
 print(category_links)
@@ -113,21 +65,18 @@ all_book_urls = []
             break
         next_page = next_button.find("a")["href"]
         cat_url = urljoin(cat_url, next_page)
-        page = requests.get(cat_url)
-        soup = BeautifulSoup(page.text, "html.parser")
-        books_on_page = soup.find_all(class_="col-xs-6 col-sm-4 col-md-3 col-lg-3")
-        for book_element in books_on_page:
-            link = book_element.find("h3").find("a")["href"]
-            full_url = urljoin(cat_url, link)
-            all_book_urls.append(full_url)
+        
      all_books = []
+     os.makedirs('csv_reports', exist_ok=True)
      for url in all_book_urls:
         book_data = scrape_one_book(url)
         all_books.append(book_data)
      safe_name = cat_name.lower().replace(" ", "_")
      df = pd.DataFrame(all_books)
-     df.to_csv(f"{safe_name}.csv", index=False)
+     df.to_csv(f"csv_reports/{safe_name}.csv", index=False)
      print(f"Saved {len(all_books)} books to {safe_name}.csv")
+
+
 
 
 
