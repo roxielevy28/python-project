@@ -4,27 +4,11 @@ import requests
 from bs4 import BeautifulSoup
 from scrapetest import scrape_one_book
 
-
-# =============================================================================
-# 🟢 ISSUE #4 — Minor cleanup: typo and unused variable
-# =============================================================================
-# Harold: (2026-06-28, Milestone 4) Two small things:
-#
-# 1. TYPO: `catergory_name` should be `category_name` (appears on line 22)
-#    Fix: rename it everywhere in this file.
-#
-# 2. UNUSED VARIABLE: `page_content = soup.find(id="default")` on line 19
-#    is never used anywhere in this file. Delete it.
-#
-# 3. DUPLICATE: `all_book_urls = []` appears twice (lines 33 and 36).
-#    Remove the second one.
-
 home_url = 'https://books.toscrape.com/index.html'
 page = requests.get(home_url)
 soup = BeautifulSoup(page.content, 'html.parser')
 
 category_links = []
-page_content = soup.find(id="default")
 category_list = soup.find(class_='nav nav-list')
 categories = category_list.find_all('a')
 
