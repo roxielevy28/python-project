@@ -3,25 +3,7 @@ from urllib.parse import urljoin
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup
-# Harold: (Milestone 3 → connects to Milestone 2) Importing the reusable scraper function I created in scrapetest.py
-# This lets me call scrape_one_book(url) for EACH book URL and get back all its details as a dictionary
 from scrapetest import scrape_one_book
-
-# =============================================================================
-# 🔴 ISSUE #1 — CSV OUTPUT: List-wrapped values (FIX IN scrapetest.py, not here)
-# =============================================================================
-# Harold: (2026-06-28, connects to Milestone 2) The scrape_one_book() function
-# returns every value wrapped in a list, e.g. {'book_title': ['The Hobbit']}.
-# When pandas builds a DataFrame from this, the CSV shows ['The Hobbit'] with
-# brackets instead of just The Hobbit.
-#
-# ✅ FIX (in scrapetest.py): Remove the [...] wrapping from every value in the
-#    return dictionary. Return plain strings, not single-element lists.
-#    This fix will automatically improve ALL CSVs from Phase2, All_Category.py,
-#    and Image_files.py — because they all call scrape_one_book().
-#
-# 🎯 WHY THIS MATTERS: Clean CSVs mean you can sort, filter, and analyze the
-#    data in Excel or pandas later without extra cleanup.
 
 # =============================================================================
 # 🔴 ISSUE #2 — NO ERROR HANDLING: One bad book crashes the whole script
@@ -47,14 +29,9 @@ for book_element in books_on_page:
         link = book_element.find('h3').find('a')['href']
         complete_url = urljoin(category_url, link)
         url_for_all_books_in_category.append(complete_url)
-    # this retrieved the link for all books on the first page
     
 print(url_for_all_books_in_category)
 
-  # this works now. i got all the links on the first page
-
-# Harold: (Milestone 3) Restructured pagination — now it loops through ALL pages, not just page 1
-# This is the 'master list' that collects EVERY book dictionary across all pages
 all_books = []
 
 # Harold: (Milestone 3, Step 1) Scrape all books on page 1 FIRST
@@ -216,11 +193,11 @@ master_report.to_csv('all_books.csv', index=False)
 # ┌─────┬──────────────────────────────┬─────────────────────┬──────────┐
 │  #  │ Issue                        │ Fix in which file   │ Status   │
 # ├─────┼──────────────────────────────┼─────────────────────┼──────────┤
-│  1  │ List-wrapped CSV values      │ scrapetest.py       │ ❌ TODO  │
+│  1  │ List-wrapped CSV values      │ scrapetest.py       │ done  │
 │  2  │ No error handling            │ Phase2 + All_Cat    │ ❌ TODO  │
 │  3  │ Generic 'all_books.csv' name │ Phase2_Young...py   │ ❌ TODO  │
-│  4  │ quantity_available is string │ scrapetest.py       │ ❌ TODO  │
-│  5  │ Duplicated descriptions      │ scrapetest.py       │ ❌ TODO  │
+│  4  │ quantity_available is string │ scrapetest.py       │ done  │
+│  5  │ Duplicated descriptions      │ scrapetest.py       │ done  │
 │  6  │ CSVs scattered in root       │ Phase2 + All_Cat    │ ❌ TODO  │
 │  7  │ 'Books' homepage in loop     │ All_Category.py     │ ❌ TODO  │
 │  8  │ Image download no error hdlg │ Image_files.py      │ ❌ TODO  │
