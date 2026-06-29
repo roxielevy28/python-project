@@ -86,7 +86,8 @@ while True:
 
 # Harold: (Milestone 3, Step 3) Export everything to ONE CSV — all books from every page in this category
 master_report = pd.DataFrame(all_books)
-master_report.to_csv('all_books.csv', index=False)
+os.makedirs('csv_reports', exist_ok=True)
+master_report.to_csv('csv_reports/all_books.csv', index=False)
 
 
 # 2. The `url_for_all_books_in_category` list is built but only used in the
