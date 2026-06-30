@@ -24,24 +24,21 @@ for category_url in categories:
 print(category_links)
 
 for category in category_links[1:]:
-     try:
-     cat_name = category["name"]
-     cat_url  = category["url"]
-     ... (all the scraping logic) ...
-     df.to_csv(f"csv_reports/{safe_name}.csv", index=False)
-     except Exception as e:
-     print(f"  ❌ Failed on {cat_name}: {e}")
-     continue
+    try:
+        cat_name = category["name"]
+        cat_url = category["url"]
 
-    all_book_urls = []
-        page = requests.get(cat_url)
-        soup = BeautifulSoup(page.text, 'html.parser')
+        all_book_urls = []
+        current_url = cat_url
 
         while True:
+            page = requests.get(current_url)
+            soup = BeautifulSoup(page.text, 'html.parser')
             books_on_page = soup.find_all(class_='col-xs-6 col-sm-4 col-md-3 col-lg-3')
+
             for book_element in books_on_page:
                 link = book_element.find('h3').find('a')['href']
-                full_url = urljoin(cat_url, link)
+                full_url = urljoin(current_url, link)
                 all_book_urls.append(full_url)
 
             next_button = soup.find(class_="next")
@@ -49,9 +46,7 @@ for category in category_links[1:]:
                 break
 
             next_page = next_button.find("a")["href"]
-            cat_url = urljoin(cat_url, next_page)
-            page = requests.get(cat_url)
-            soup = BeautifulSoup(page.text, 'html.parser')
+            current_url = urljoin(current_url, next_page)
 
         all_books = []
         for url in all_book_urls:
@@ -91,24 +86,7 @@ for category in category_links[1:]:
 #   
 #
 # ---------------------------------------------------------------------------
-# Harold: (Milestone 4, Step 3 — pagination, same pattern as Phase2) Click 'next' until no more pages
-# ---------------------------------------------------------------------------
-#     while True:
-#         next_button = soup.find(class_='next')
-#         if not next_button:
-#             break
-#         next_page = next_button.find("a")["href"]
-#         cat_url = urljoin(cat_url, next_page)
-#
-#         page = requests.get(cat_url)
-#         soup = BeautifulSoup(page.text, 'html.parser')
-#         books_on_page = soup.find_all(class_='col-xs-6 col-sm-4 col-md-3 col-lg-3')
-#
-#         for book_element in books_on_page:
-#             link = book_element.find('h3').find('a')['href']
-#             full_url = urljoin(cat_url, link)
-#             all_book_urls.append(full_url)
-#
+
 # ---------------------------------------------------------------------------
 # Harold: (Milestone 4, Step 4 — connects to Milestone 2!) Call scrape_one_book() for EVERY book URL
 # ---------------------------------------------------------------------------
